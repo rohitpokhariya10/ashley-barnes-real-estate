@@ -208,7 +208,7 @@ export function SiteHeader() {
           >
             Let&rsquo;s Connect <ArrowRight className="btn-arrow" />
           </IntentLink>
-          <p className="label mt-auto pt-10 text-center text-ivory/60">
+          <p className="label mt-auto whitespace-nowrap pt-10 text-center text-[0.625rem] !tracking-[0.14em] text-ivory/60">
             {site.agentName} <span className="text-gold-light">|</span> {site.designation}{" "}
             <span className="text-gold-light">|</span> {site.brokerage}
           </p>

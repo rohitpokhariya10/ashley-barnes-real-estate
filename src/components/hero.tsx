@@ -40,19 +40,19 @@ export function Hero() {
           </p>
           <h1
             id="hero-heading"
-            className="mt-6 font-serif text-[clamp(2.625rem,10.5vw,3.5rem)] font-medium leading-[1.02] tracking-[-0.012em] text-navy md:text-[clamp(3.25rem,6.6vw,4rem)] lg:text-[clamp(3rem,5vw,3.75rem)] xl:text-[clamp(3.5rem,4.5vw,4.375rem)]"
+            className="mt-6 font-serif text-[clamp(2.25rem,10.4vw,3.25rem)] font-medium leading-[1.02] tracking-[-0.012em] text-navy md:text-[clamp(3.25rem,6.6vw,4rem)] lg:text-[clamp(2.75rem,4.6vw,3.75rem)] xl:text-[clamp(3.75rem,5.2vw,4.75rem)]"
           >
             <span className="reveal block" style={delay(1)}>
               Real Estate Decisions
             </span>
             <span className="reveal block" style={delay(2)}>
-              Deserve a <em className="font-medium text-gold">Smarter Strategy.</em>
+              Deserve a <em className="block font-medium text-gold sm:inline">Smarter Strategy.</em>
             </span>
           </h1>
         </header>
 
         {/* 2 — Supporting copy */}
-        <div className="hero-copy mt-8 md:mt-10 xl:mt-12">
+        <div className="hero-copy mt-8 md:mt-10 xl:mt-14">
           <p
             className="reveal font-serif text-[1.5rem] italic leading-[1.3] text-navy sm:text-[1.625rem]"
             style={delay(3)}
@@ -73,12 +73,12 @@ export function Hero() {
         </div>
 
         {/* 3 — Portrait + agent identity */}
-        <div className="hero-portrait mt-10 self-start pl-3 md:mt-10 lg:mt-12 xl:mt-12">
+        <div className="hero-portrait mt-10 pb-3 pl-3 md:self-start lg:mt-12 xl:mt-14 xl:self-stretch">
           <AgentCard />
         </div>
 
         {/* 4 — Primary actions */}
-        <div className="hero-actions reveal mt-10 flex flex-wrap gap-3 self-end md:mt-8 lg:mt-9 lg:self-start xl:self-end" style={delay(6)}>
+        <div className="hero-actions reveal mt-10 flex flex-wrap gap-3 self-end pb-3 md:mt-8 lg:mt-9 lg:self-start lg:pb-0 xl:self-end xl:pb-3" style={delay(6)}>
           {site.routes.propertySearch ? (
             <Link href={site.routes.propertySearch} className="btn btn-navy grow">
               {explore}
@@ -100,13 +100,13 @@ export function Hero() {
         {/* 6 — Trust indicators */}
         <ul
           aria-label="What you can expect"
-          className="hero-trust reveal mt-12 flex flex-col divide-y divide-gold/30 border-y border-gold/30 sm:flex-row sm:divide-x sm:divide-y-0 lg:mt-14 xl:mt-12"
+          className="hero-trust reveal mt-12 flex flex-col divide-y divide-gold/30 border-y border-gold/30 md:max-lg:flex-row md:max-lg:divide-x md:max-lg:divide-y-0 lg:mt-9"
           style={delay(7)}
         >
           {TRUST.map((item) => (
             <li
               key={item}
-              className="flex items-center gap-3 py-4 text-[0.8125rem] sm:flex-auto font-semibold leading-snug tracking-[0.02em] text-navy sm:justify-center sm:px-4 sm:first:pl-0 sm:last:pr-0"
+              className="flex items-center gap-3 py-3.5 text-[0.8125rem] font-semibold leading-snug tracking-[0.02em] text-navy md:max-lg:flex-auto md:max-lg:justify-center md:max-lg:px-4 md:max-lg:py-4 md:max-lg:first:pl-0 md:max-lg:last:pr-0"
             >
               <Check className="shrink-0 text-gold" />
               {item}

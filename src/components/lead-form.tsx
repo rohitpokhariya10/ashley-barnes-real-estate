@@ -66,6 +66,8 @@ export function LeadForm() {
   const [attempted, setAttempted] = useState(false);
   const [editedSinceSubmit, setEditedSinceSubmit] = useState<ReadonlySet<LeadField>>(new Set());
   const successRef = useRef<HTMLHeadingElement>(null);
+  // Synchronous lock: `pending` only flips on the next render, which is too late for a rapid double-click.
+  const inFlight = useRef(false);
   const succeeded = state.status === "success";
 
   // Errors are derived, never stored: client rules first, then anything the server rejected.
@@ -103,11 +105,12 @@ export function LeadForm() {
   }, []);
 
   useEffect(() => {
-    if (succeeded) successRef.current?.focus();
-  }, [succeeded]);
+    inFlight.current = false; // the action settled (or nothing has been sent yet)
+    if (state.status === "success") successRef.current?.focus();
+  }, [state]);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    if (pending) {
+    if (pending || inFlight.current) {
       event.preventDefault(); // guard against duplicate submissions
       return;
     }
@@ -119,6 +122,7 @@ export function LeadForm() {
       document.getElementById(id)?.focus();
       return;
     }
+    inFlight.current = true;
     setEditedSinceSubmit(new Set());
   };
 
@@ -131,7 +135,7 @@ export function LeadForm() {
       className="@container relative bg-white shadow-card ring-1 ring-navy/[0.07]"
     >
       <span aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-gold" />
-      <div className="px-6 pb-8 pt-9 sm:px-9 sm:pb-9 sm:pt-11">
+      <div className="px-6 pb-8 pt-9 sm:px-9 sm:pb-9 sm:pt-11 lg:max-xl:px-8">
         <p className="label text-gold-deep">Let&rsquo;s Start a Conversation</p>
         <h2
           id="consultation-heading"
@@ -164,7 +168,7 @@ export function LeadForm() {
               determine the best next steps.
             </p>
 
-            <form action={formAction} onSubmit={onSubmit} noValidate className="mt-7 grid gap-x-5 gap-y-5 @xl:grid-cols-2">
+            <form action={formAction} onSubmit={onSubmit} noValidate className="mt-7 grid gap-x-5 gap-y-[1.125rem] @xl:grid-cols-2">
               <Field field="fullName" label="Full Name" error={errorFor("fullName")} className="@xl:col-span-2">
                 <input
                   id={fieldId("fullName")}
@@ -302,7 +306,7 @@ export function LeadForm() {
                     {state.message}
                   </p>
                 )}
-                <button type="submit" disabled={pending} aria-disabled={pending} className="btn btn-navy mt-1 w-full">
+                <button type="submit" disabled={pending} aria-disabled={pending} className="btn btn-navy mt-1 w-full !px-4 !tracking-[0.12em] @sm:!tracking-[0.14em] @md:!tracking-[0.18em]">
                   {pending ? (
                     <>
                       <span
@@ -313,7 +317,7 @@ export function LeadForm() {
                     </>
                   ) : (
                     <>
-                      Let&rsquo;s Talk About Your Goals <ArrowRight className="btn-arrow text-gold-light" />
+                      Let&rsquo;s Talk About Your Goals <ArrowRight className="btn-arrow hidden shrink-0 text-gold-light @sm:block" />
                     </>
                   )}
                 </button>

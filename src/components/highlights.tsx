@@ -48,9 +48,9 @@ export function Highlights() {
             sizes="60px"
             className="h-11 w-auto"
           />
-          <p className="label text-center text-navy">
-            {site.agentName} <span className="mx-1.5 text-gold">|</span> {site.designation}{" "}
-            <span className="mx-1.5 text-gold">|</span> {site.brokerage}
+          <p className="label whitespace-nowrap text-center text-[0.625rem] !tracking-[0.14em] text-navy sm:text-[0.6875rem] sm:!tracking-[0.2em]">
+            {site.agentName} <span className="mx-1 text-gold sm:mx-1.5">|</span> {site.designation}{" "}
+            <span className="mx-1 text-gold sm:mx-1.5">|</span> {site.brokerage}
           </p>
           <Image
             src="/brand/jpar-real-estate-logo.png"

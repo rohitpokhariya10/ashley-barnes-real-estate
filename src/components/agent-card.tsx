@@ -16,7 +16,7 @@ export function AgentCard() {
   );
 
   return (
-    <div className="@container relative">
+    <div className="@container relative h-full">
       {/* Offset gold frame */}
       <span
         aria-hidden
@@ -26,10 +26,10 @@ export function AgentCard() {
       <article
         id="about"
         aria-labelledby="agent-name"
-        className="reveal-unveil relative grid bg-navy text-ivory shadow-card @md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]"
+        className="reveal-unveil relative grid h-full grid-rows-[1fr_auto] bg-navy text-ivory shadow-card @md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] @md:grid-rows-1"
         style={{ "--d": 3 } as React.CSSProperties}
       >
-        <div className="relative aspect-[8/9] overflow-hidden bg-navy-deep @md:aspect-auto @md:min-h-[17rem]">
+        <div className="relative aspect-[8/9] w-full self-stretch overflow-hidden bg-navy-deep @md:aspect-auto @md:min-h-[17rem]">
           <Image
             src="/brand/ashley-barnes-portrait.jpg"
             alt="Portrait of Ashley Barnes, REALTOR® with JPAR Real Estate"
@@ -45,11 +45,11 @@ export function AgentCard() {
           />
         </div>
 
-        <div className="flex flex-col justify-center px-6 pb-6 pt-5 @md:py-7 @md:pl-5 @md:pr-7">
+        <div className="flex flex-col justify-center px-5 pb-6 pt-5 @xs:px-6 @md:py-7 @md:pl-5 @md:pr-7">
           <h2 id="agent-name" className="font-serif text-[1.75rem] font-medium leading-none tracking-[0.01em]">
             {site.agentName}
           </h2>
-          <p className="label mt-2.5 text-[0.625rem] text-gold-light">
+          <p className="label mt-2.5 whitespace-nowrap text-[0.625rem] !tracking-[0.13em] text-gold-light @xs:!tracking-[0.2em]">
             {site.designation} <span className="mx-0.5 text-ivory/40">|</span> {site.brokerage}
           </p>
           <span aria-hidden className="mt-4 block h-px w-10 bg-gold-light/70" />
