@@ -15,8 +15,8 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || null,
   serviceAreas: ["San Antonio", "Schertz", "Cibolo", "New Braunfels"],
   routes: {
-    /** Property search / Buy page. `null` → "Explore Homes" opens the form with "Buying a Home" selected. */
-    propertySearch: null as string | null,
+    /** Featured homes section; may be replaced with a full property search page later. */
+    propertySearch: "/#properties" as string | null,
   },
 } as const;
 

@@ -1,4 +1,5 @@
 import { Hero } from "@/components/hero";
+import { FeaturedProperties } from "@/components/featured-properties";
 import { Highlights } from "@/components/highlights";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/site";
@@ -31,6 +32,7 @@ export default function Home() {
       <SiteHeader />
       <main id="main">
         <Hero />
+        <FeaturedProperties />
         <Highlights />
       </main>
     </>

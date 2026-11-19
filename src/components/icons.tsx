@@ -54,3 +54,21 @@ export const Key = (props: IconProps) => (
     <path d="M15 17L27 5M22.5 9.500l3.5 3.500M19.5 12.500l2.5 2.5" />
   </svg>
 );
+
+export const Bed = (props: IconProps) => (
+  <svg viewBox="0 0 24 24" width="24" height="24" {...base} {...props}>
+    <path d="M3 18v3M21 18v3M3 13V5h18v8M3 18h18v-5H3zM6 13V9h5v4M13 13V9h5v4" />
+  </svg>
+);
+
+export const Bath = (props: IconProps) => (
+  <svg viewBox="0 0 24 24" width="24" height="24" {...base} {...props}>
+    <path d="M3 12h18M4 12v3a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-3M7 19l-1 2M17 19l1 2M6 12V5a2 2 0 0 1 4 0v1M8 6h4" />
+  </svg>
+);
+
+export const SquareFeet = (props: IconProps) => (
+  <svg viewBox="0 0 24 24" width="24" height="24" {...base} {...props}>
+    <path d="M9 3H3v6M15 3h6v6M21 15v6h-6M9 21H3v-6" />
+  </svg>
+);
