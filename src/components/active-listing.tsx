@@ -54,11 +54,14 @@ function ListingVisual({ listing, acres }: { listing: ActiveListing; acres: stri
           alt={photo.alt}
           fill
           sizes="(min-width: 1376px) 700px, (min-width: 1024px) 52vw, calc(100vw - 52px)"
+          style={{ objectPosition: photo.position }}
           className="object-cover transition-transform duration-700 ease-luxe group-hover:scale-[1.03]"
         />
-        {photo.credit && (
-          <figcaption className="absolute bottom-3 right-3 max-w-[calc(100%-1.5rem)] bg-navy/75 px-2.5 py-1 text-xs text-ivory/90">
-            Photo: {photo.credit}
+        {/* Soft navy fade over the sky, behind the caption, so the subject below stays unobstructed. */}
+        <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-navy-deep/55 to-transparent" />
+        {(photo.caption || photo.credit) && (
+          <figcaption className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] bg-navy/75 px-2.5 py-1 text-xs text-ivory/90">
+            {[photo.caption, photo.credit && `Photo: ${photo.credit}`].filter(Boolean).join(" · ")}
           </figcaption>
         )}
       </figure>

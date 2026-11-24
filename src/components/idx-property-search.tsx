@@ -3,6 +3,8 @@ import { ArrowRight } from "./icons";
 import { IdxSearchFrame } from "./idx-search-frame";
 import { IntentLink } from "./intent-link";
 import { idxSearch, type IdxSearch } from "@/lib/idx";
+import { getIdxAvailability } from "@/lib/idx-availability";
+import { site } from "@/lib/site";
 
 const textLink =
   "inline-block py-1 font-semibold text-ivory underline decoration-gold-light/60 underline-offset-[6px] transition-colors hover:text-gold-light hover:decoration-gold-light";
@@ -164,12 +166,21 @@ function EmbeddedSearch({ provider, searchUrl, embedUrl, disclaimer }: Extract<I
   );
 }
 
+/** `auto` becomes the hosted search once it is verifiably live, and stays inactive until then. Never embed. */
+async function resolveAuto(search: IdxSearch): Promise<Exclude<IdxSearch, { mode: "auto" }>> {
+  if (search.mode !== "auto") return search;
+  const { provider, searchUrl, disclaimer } = search;
+  const availability = await getIdxAvailability(searchUrl, site.url ? `${site.url}/` : null);
+  return availability === "active" ? { mode: "hosted", provider, searchUrl, disclaimer } : { mode: "inactive", provider };
+}
+
 /**
  * "Find Your Next Home": entry point to the MLS's own IDX property search. What
  * it shows depends on `src/lib/idx.ts`. No listing data is fetched or displayed
  * by this site, so the provider's pages carry the MLS attribution and notices.
  */
-export function IdxPropertySearch({ search = idxSearch }: { search?: IdxSearch }) {
+export async function IdxPropertySearch({ search: configured = idxSearch }: { search?: IdxSearch }) {
+  const search = await resolveAuto(configured);
   return (
     <section
       id="property-search"
