@@ -84,6 +84,10 @@ referring site. Embedding could not be tested, because only the error page is se
 `site.idxSearch.verified` is therefore `false`, and the section shows "Coming soon" without
 linking to the error page.
 
+Once live, the hosted search provides its own location, price, bedroom and bathroom filters.
+It does not take search criteria from another page's URL, so this site links to (or, if SABOR
+approves, frames) the search rather than offering separate filter fields that could not work.
+
 What the client (Ashley, with her designated broker) needs to do, per
 [SABOR's IDX page](https://sabor.com/?p=2494) and SABOR's IDX activation steps:
 
