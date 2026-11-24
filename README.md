@@ -18,7 +18,7 @@ npm run build && npm start
 | Buy / Sell / Invest / About pages | `navigation` in `src/lib/site.ts` (add `href`) | Links open the form with the matching interest pre-selected. |
 | Production URL | `NEXT_PUBLIC_SITE_URL` | No canonical / Open Graph URL is emitted. |
 | SABOR IDX search activation | `src/lib/idx.ts` (`mode: "auto"`) — see [IDX property search](#idx-property-search) | "Find Your Next Home" shows a disabled preview of the search filters, labelled "Search available after MLS activation"; its button opens the form as a buyer enquiry. It switches to the live search by itself within about five minutes of SABOR activating the URL. |
-| Active listing confirmation | `src/lib/active-listing.ts` — see [My Active Listing](#my-active-listing) | The section shows the Zillow facts and the brand panel (the listing photo is local-preview only until permission is received), with no "Listed by" credit. |
+| Active listing confirmation | `src/lib/active-listing.ts` — see [My Active Listing](#my-active-listing) | The section shows the Zillow facts and the listing photo, with no "Listed by" credit. |
 
 The lead endpoint receives a JSON `POST`:
 
@@ -71,16 +71,12 @@ Before publishing:
    `listedByAgent: true` to show "Listed by Ashley Barnes, REALTOR® · JPAR Real Estate".
    If Ashley is *not* the listing agent, retitle the section and get the listing broker's
    written permission to advertise it.
-3. **Photo (permission needed).** The listing's main aerial photo, cropped from a screenshot of
-   the Zillow listing with the Zillow interface removed, is for **local preview only**: its
-   publishing rights belong to the listing photographer or broker and are unconfirmed. It lives
-   in the git-ignored `public/local-preview/` folder and shows only when `.env.local` sets
-   `LOCAL_LISTING_PHOTO_PREVIEW=1`. Commits, Vercel previews and production show the navy brand
-   panel instead. Once written permission is received, get the original (higher-resolution)
-   file, save it as `public/properties/601-lonesome-trl-lot-44.jpg`, set `photo` in
-   `src/lib/active-listing.ts` to it (reuse the preview's `alt`, `caption` and `position`), and
-   add `credit` if required. The caption repeats the boundary notice printed on the original
-   photo. Never hotlink Zillow images.
+3. **Photo.** `public/properties/601-lonesome-trl-lot-44.jpg` is the listing's main aerial photo,
+   cropped from the Zillow listing with the Zillow interface removed and published with the rights
+   holder's permission (confirmed 2026-11-25). It is 869 × 556 px; if the listing broker or
+   photographer supplies the original, higher-resolution file, replace it at the same path. Add
+   `photo.credit` if they require a credit. The caption repeats the boundary notice printed on the
+   original photo. Never hotlink Zillow images.
 
 ## IDX property search
 
