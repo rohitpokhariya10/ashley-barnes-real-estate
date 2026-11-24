@@ -17,7 +17,7 @@ npm run build && npm start
 | Full property search / Buy page | `site.routes.propertySearch` in `src/lib/site.ts` | "Explore Homes" scrolls to the featured properties below the hero. |
 | Buy / Sell / Invest / About pages | `navigation` in `src/lib/site.ts` (add `href`) | Links open the form with the matching interest pre-selected. |
 | Production URL | `NEXT_PUBLIC_SITE_URL` | No canonical / Open Graph URL is emitted. |
-| SABOR IDX search activation | `site.idxSearch` in `src/lib/site.ts` — see [IDX property search](#idx-property-search) | "Find Your Next Home" shows a "Coming soon" state whose button opens the form as a buyer enquiry. |
+| SABOR IDX search activation | `src/lib/idx.ts` — see [IDX property search](#idx-property-search) | "Find Your Next Home" shows a disabled preview of the search filters, labelled "Search available after MLS activation"; its button opens the form as a buyer enquiry. |
 | Active listing confirmation | `src/lib/active-listing.ts` — see [My Active Listing](#my-active-listing) | The section shows the supplied facts, no photo and no "Listed by" credit. |
 
 The lead endpoint receives a JSON `POST`:
@@ -73,41 +73,72 @@ Before publishing:
 
 ## IDX property search
 
-`src/components/idx-property-search.tsx` ("Find Your Next Home") links to the client-supplied
-SABOR MLS IDX search. It is a provider-hosted page — not an API — and the site never fetches
-or displays MLS data itself.
+`src/components/idx-property-search.tsx` ("Find Your Next Home") is driven entirely by
+`src/lib/idx.ts`. The client-supplied SABOR MLS IDX URL is a search page hosted by the MLS's
+provider (connectMLS), not an API: the site links to it or frames it, and never fetches, stores
+or displays MLS data itself. No backend is needed for either.
 
-**Status (checked 2026-11-24): blocked pending SABOR activation.** The supplied URL
+**Status (checked 2026-11-25): blocked pending SABOR activation.** The supplied URL
 `https://sabor-idx.connectmls.com/idx/spr/60F98AE5A0D0D516E063AA01110ABFC1/search` returns
-`HTTP 403 — "This site has not been configured"` from the provider, with or without a
-referring site. Embedding could not be tested, because only the error page is served.
-`site.idxSearch.verified` is therefore `false`, and the section shows "Coming soon" without
-linking to the error page.
+`HTTP 403 — "This site has not been configured"`, so `mode` is `"inactive"`.
 
-Once live, the hosted search provides its own location, price, bedroom and bathroom filters.
-It does not take search criteria from another page's URL, so this site links to (or, if SABOR
-approves, frames) the search rather than offering separate filter fields that could not work.
+### Modes
 
-What the client (Ashley, with her designated broker) needs to do, per
-[SABOR's IDX page](https://sabor.com/?p=2494) and SABOR's IDX activation steps:
+| `mode` | What visitors see | Use when |
+|---|---|---|
+| `"inactive"` (current) | A preview of the location, price, bedroom and bathroom filters and a Search Properties button, all disabled and labelled "Search available after MLS activation", plus "Start Your Home Search" (opens the form as a buyer enquiry). | SABOR has not activated the search. |
+| `"hosted"` | "Search Available Properties", opening the official search in a new tab. The preview is removed. | The search URL loads in a browser. |
+| `"embed"` | The official search framed in the page (`src/components/idx-search-frame.tsx`): loaded as it nears the viewport, with a loading state, an "Open in a new tab" link that is always visible, a fallback message if the frame has not loaded after 15 seconds, and a skip link for keyboard users. The preview is removed. | SABOR has confirmed in writing that the search may be framed on this domain. |
 
-1. Sign SABOR's **IDX agreement** — signed by the **designated broker** (JPAR) and by Ashley
-   as the requesting agent — and return it to SABOR (idx@sabor.com).
+An incomplete setup never reaches visitors. `"embed"` without an `https` `embedUrl` shows
+`"hosted"`, and a `searchUrl` that is not `https` shows `"inactive"`. Both print a warning
+during the build.
+
+### Why the filters are only a preview
+
+The connectMLS search has its own location, price, bedroom and bathroom filters and takes no
+search criteria from another page. SABOR's published IDX options (a frameable link from the MLS
+set-up tab, a site built by a SABOR-approved vendor, or a link to SABOR.com) document no URL
+parameters, widget or API for passing criteria in. Filter fields on this page could therefore
+not search anything, so they stay disabled and disappear once the provider's own search is
+switched on.
+
+Filters that show results directly on this site would need a licensed IDX data feed through a
+SABOR-approved vendor (SABOR links the LERA IDX Data Feed Agreement for that route) and a
+server-side integration that keeps feed credentials off the browser. That is a separate project
+and is not needed for the hosted or framed search.
+
+### What the team needs from SABOR
+
+1. The **IDX agreement**, signed by the **designated broker** (JPAR) and by Ashley as the
+   requesting agent, returned to SABOR (idx@sabor.com).
 2. In the MLS: **Settings → Manage IDX Configuration → Add New Configuration**, entering this
-   website's **production URL** (the same origin as `NEXT_PUBLIC_SITE_URL`; include both
-   `www` and non-`www` if both will be used).
-3. Ask SABOR IDX support (idx@sabor.com, 210-593-1206) to **review the site for compliance
-   and activate the configuration**. Ask them to confirm:
-   - the final **search URL or embed code** for this site (it may differ from the URL above);
-   - whether the search may be **framed** (SABOR calls it a "frameable link") and from which
-     domains, including any `X-Frame-Options` / `frame-ancestors` restrictions;
-   - any **attribution or disclaimer** text required on the page that links to or frames it.
+   website's **production URL** (the same origin as `NEXT_PUBLIC_SITE_URL`; include both `www`
+   and non-`www` if both will be used).
+3. From SABOR IDX support (idx@sabor.com, 210-593-1206), written confirmation of:
+   - **activation**, after their compliance review of the site;
+   - the final **search URL** (it may differ from the one above);
+   - whether the search may be **framed** on this domain (and on preview domains, if it will be
+     tested there first) and, if so, the **embed code or frame URL**;
+   - any **attribution or disclaimer** text required beside the search.
 
-When SABOR confirms activation:
+### Activation steps
 
-1. Open the search URL in a browser and check that the live search loads (not the 403 page).
-2. Update `site.idxSearch.url` if SABOR issued a new one, set `verified: true`, and redeploy.
-   The section then shows "Search Available Properties", opening the search in a new tab.
-3. Framing the search in the page is a separate, later change: do it only if SABOR confirms
-   framing is allowed for this domain, and test it on the production domain. The link stays
-   as a fallback either way.
+1. Open the search URL in a browser. Check that the live search loads (not the 403 page) and that
+   its filters return results.
+2. In `src/lib/idx.ts`, edit `idxConfig`:
+   - `searchUrl`: replace it only if SABOR issued a new URL;
+   - `disclaimer`: paste any text SABOR requires, verbatim (otherwise leave `null`);
+   - `mode: "hosted"`.
+3. Only if SABOR approved framing: also set `embedUrl` to the `src` of the `<iframe>` in their
+   embed code, and `mode: "embed"`. If their embed code is a script rather than an `<iframe>`, it
+   cannot go in `embedUrl`; it needs a small component change instead.
+4. Run `npm run lint && npm run build`, open a pull request, and check the section on the Vercel
+   preview at desktop and mobile widths.
+5. After merging and deploying, check the section on the production domain. In `"embed"` mode the
+   frame must show the working search, not a 403, refusal or blank page; if it does not, set
+   `mode` back to `"hosted"`.
+
+To try a mode on a preview deployment without editing the file, set `IDX_MODE` (and
+`IDX_EMBED_URL` / `IDX_SEARCH_URL` as needed) as environment variables for that environment and
+redeploy. They are read at build time and override `src/lib/idx.ts`.
