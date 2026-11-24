@@ -28,8 +28,8 @@ export type ActiveListing = {
   /** Site the listing link and figures come from. */
   source: string;
   /**
-   * Local listing photo. Publish only with permission from its rights holder
-   * (see the README). `null` shows a decorative brand panel instead.
+   * Local listing photo under /public, published only with its rights holder's
+   * permission. `null` shows a decorative brand panel instead.
    */
   photo: ListingPhoto | null;
   /**
@@ -38,26 +38,6 @@ export type ActiveListing = {
    */
   listedByAgent: boolean;
 };
-
-/**
- * The listing's main aerial photo, cropped (no Zillow interface) from the team's
- * screenshot of the Zillow listing. Its publishing rights are unconfirmed, so it
- * is for LOCAL PREVIEW ONLY: the file lives in the git-ignored
- * `public/local-preview/` folder and is used only when `.env.local` (also
- * git-ignored) sets LOCAL_LISTING_PHOTO_PREVIEW=1. Commits and deployments show
- * the brand panel. Once the listing broker or photographer grants written
- * permission, add their original file under `public/properties/` and set
- * `photo` below to it directly. See "My Active Listing" in the README.
- */
-const localPreviewPhoto: ListingPhoto | null =
-  process.env.LOCAL_LISTING_PHOTO_PREVIEW === "1"
-    ? {
-        src: "/local-preview/601-lonesome-trl-lot-44.jpg",
-        alt: "Aerial view of 601 Lonesome Trl, Lot 44, in Driftwood, Texas: the 5.44-acre lot, outlined in white, with mature trees, a cleared meadow and existing buildings, surrounded by wooded Hill Country.",
-        caption: "All property lines are rough estimates and not survey accurate.",
-        position: "63% 85%",
-      }
-    : null;
 
 /**
  * Source of truth: the Zillow listing at `listingUrl`. Not a live feed, and
@@ -80,6 +60,12 @@ export const activeListing = {
   mlsNumber: "2008671",
   listingUrl: "https://www.zillow.com/homedetails/601-Lonesome-Trl-44-Driftwood-TX-78619/464570153_zpid/",
   source: "Zillow",
-  photo: localPreviewPhoto,
+  /** The listing's main aerial photo, published with the rights holder's permission (confirmed 2026-11-25). */
+  photo: {
+    src: "/properties/601-lonesome-trl-lot-44.jpg",
+    alt: "Aerial view of 601 Lonesome Trl, Lot 44, in Driftwood, Texas: the 5.44-acre lot, outlined in white, with mature trees, a cleared meadow and existing buildings, surrounded by wooded Hill Country.",
+    caption: "All property lines are rough estimates and not survey accurate.",
+    position: "63% 85%",
+  },
   listedByAgent: false,
 } as const satisfies ActiveListing;
