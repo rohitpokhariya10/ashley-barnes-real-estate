@@ -26,6 +26,8 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* Clears the sticky header for anchor jumps and for keyboard focus scrolling alike. */
+    scroll-padding-top: 6.5rem;
   }
   body {
     background: var(--color-ivory);
@@ -39,9 +41,6 @@
   :focus-visible {
     outline: 2px solid var(--color-gold);
     outline-offset: 3px;
-  }
-  [id] {
-    scroll-margin-top: 6.5rem;
   }
 }
 

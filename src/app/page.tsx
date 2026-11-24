@@ -1,5 +1,7 @@
 import { Hero } from "@/components/hero";
 import { FeaturedProperties } from "@/components/featured-properties";
+import { ActiveListingSection } from "@/components/active-listing";
+import { IdxPropertySearch } from "@/components/idx-property-search";
 import { Highlights } from "@/components/highlights";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/site";
@@ -33,6 +35,8 @@ export default function Home() {
       <main id="main">
         <Hero />
         <FeaturedProperties />
+        <ActiveListingSection />
+        <IdxPropertySearch />
         <Highlights />
       </main>
     </>

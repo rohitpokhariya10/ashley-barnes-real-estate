@@ -18,6 +18,7 @@ export const site = {
     /** Featured homes section; may be replaced with a full property search page later. */
     propertySearch: "/#properties" as string | null,
   },
+  /* The SABOR MLS IDX search is configured in ./idx.ts. */
 } as const;
 
 export type LeadIntent = {
